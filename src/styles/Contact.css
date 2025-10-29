@@ -1,0 +1,111 @@
+/* Main container */
+.contact-page {
+  padding: 80px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Section titles */
+.section__title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.section__subtitle {
+  margin-bottom: 30px;
+  color: #555;
+}
+
+/* Form layout */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Inputs and textarea */
+.input-field {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+/* Keep your project’s original button style */
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Slightly bigger button */
+.btn--lg {
+  font-size: 21px; /* slightly larger text */
+  padding: 14px 28px; /* more breathing room */
+  min-width: 220px; /* ensures full text fits nicely */
+  height: 58px; /* slightly taller */
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .contact-page {
+    padding: 60px 15px;
+  }
+
+  .input-field {
+    font-size: 15px;
+  }
+
+  .btn--lg {
+    font-size: 19px;
+    padding: 13px 25px;
+    min-width: 100%;
+    height: 55px;
+  }
+}
+
+.status-message {
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px 0;
+  text-align: center;
+  font-weight: 500;
+  animation: slideDown 0.3s ease-out;
+}
+
+.status-message.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.status-message.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+

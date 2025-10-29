@@ -1,0 +1,69 @@
+/* Main container */
+.community-page {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+/* Section subtitles */
+.section__subtitle {
+  margin-bottom: 30px;
+}
+
+/* Links/buttons container */
+.community-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 18px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 12px 32px; /* smaller + flexible */
+  max-width: 220px;   /* limit the width */
+  width: auto;        /* allow auto size */
+}
+
+.btn--primary {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.9;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Large button modifier */
+.btn--lg {
+  font-size: 18px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .community-page {
+    padding: 60px 15px;
+  }
+
+  .community-links {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .community-links .btn {
+    padding: 10px 26px;
+    font-size: 16px;
+    max-width: 180px;  /* smaller on mobile */
+  }
+}

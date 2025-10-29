@@ -1,0 +1,272 @@
+/* Empty state styles */
+.explanation-empty { 
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #4b5563;
+}
+
+.explanation-empty-icon svg {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem auto;
+}
+
+.explanation-empty h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.explanation-empty p {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+/* Container */
+.explanation-container {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+/* Header */
+.explanation-header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.explanation-header p {
+  font-size: 1.125rem;
+  color: #6b7280;
+}
+
+/* Content */
+.explanation-content {
+  font-size: 1rem;
+  color: #374151;
+}
+
+.explanation-text {
+  margin-bottom: 2rem;
+}
+
+/* Examples */
+.explanation-examples h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #111827;
+}
+
+.explanation-example {
+  margin-bottom: 1.5rem;
+}
+
+.explanation-example h4 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+/* Code boxes */
+.explanation-code-box {
+  background: #111827;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.explanation-code-topbar {
+  background: #1f2937;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: #d1d5db;
+}
+
+.explanation-code-pre {
+  padding: 1rem;
+  color: #10b981;
+  font-family: monospace;
+  overflow-x: auto;
+}
+
+.explanation-code-text {
+  margin-top: 0.5rem;
+  color: #d1d5db;
+}
+
+/* Complete / Mark as Read button */
+.explanation-complete-btn {
+  display: flex;
+  justify-content: flex-start; /* left aligned */
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.explanation-complete-btn button {
+  padding: 0.75rem 1.5rem;
+  background: #16a34a;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.explanation-complete-btn button:hover {
+  background: #15803d;
+}
+
+/* Completed state */
+.explanation-complete-btn button.completed {
+  background: #16a34a;
+  color: #ffffff;
+  cursor: default;
+}
+
+/* Click animation */
+.explanation-complete-btn button.animate {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+
+/* ---------------- EMPTY STATE ---------------- */
+.explanation-empty { 
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #4b5563;
+}
+
+.explanation-empty-icon svg {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem auto;
+}
+
+.explanation-empty h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.explanation-empty p {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+/* ---------------- CONTAINER ---------------- */
+.explanation-container {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.explanation-header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.explanation-header p {
+  font-size: 1.125rem;
+  color: #6b7280;
+}
+
+.explanation-content {
+  font-size: 1rem;
+  color: #374151;
+}
+
+.explanation-text {
+  margin-bottom: 2rem;
+}
+
+/* ---------------- EXAMPLES ---------------- */
+.explanation-examples h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #111827;
+}
+
+.explanation-example {
+  margin-bottom: 1.5rem;
+}
+
+.explanation-example h4 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.explanation-code-box {
+  background: #111827;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.explanation-code-topbar {
+  background: #1f2937;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: #d1d5db;
+}
+
+.explanation-code-pre {
+  padding: 1rem;
+  color: #10b981;
+  font-family: monospace;
+  overflow-x: auto;
+}
+
+.explanation-code-text {
+  margin-top: 0.5rem;
+  color: #d1d5db;
+}
+
+/* ---------------- COMPLETE BUTTON ---------------- */
+.explanation-complete-btn {
+  display: flex;
+  justify-content: flex-end; /* leftmost position */
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.explanation-complete-btn button {
+  padding: 0.75rem 1.5rem;
+  background: #16a34a;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.explanation-complete-btn button:hover {
+  background: #15803d;
+}
+
+/* ---------------- COMPLETED STATE ---------------- */
+.explanation-complete-btn button.completed {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.explanation-complete-btn button.completed:hover {
+  background: #059669;
+}
+
+.explanation-complete-btn button.completed::before {
+  content: "✅ ";
+  margin-right: 0.25rem;
+}
+

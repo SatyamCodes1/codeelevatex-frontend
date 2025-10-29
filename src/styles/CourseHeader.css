@@ -1,0 +1,176 @@
+/* Header container */
+.ch-header {
+  background-color: #b6d0ce;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 16px 24px;
+}
+
+.ch-header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Info + Progress */
+.ch-info-progress {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Circular progress */
+.ch-circular-progress {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  transform: rotate(-90deg);
+}
+
+.ch-svg-outer {
+  width: 64px;
+  height: 64px;
+}
+
+.ch-circle-bg {
+  fill: transparent;
+  stroke: #e5e7eb;
+  stroke-width: 4;
+}
+
+.ch-circle-progress {
+  fill: transparent;
+  stroke: #3b82f6;
+  stroke-width: 4;
+  stroke-dasharray: 175.929;
+  transition: stroke-dashoffset 0.3s ease-in-out;
+}
+
+.ch-circle-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+  transform: rotate(90deg);
+}
+
+/* Course details */
+.ch-course-details h1 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.ch-progress-meta {
+  font-size: 12px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+/* Linear progress bar */
+.ch-linear-progress {
+  width: 256px;
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  margin-top: 8px;
+}
+
+.ch-linear-fill {
+  height: 8px;
+  background-color: #3b82f6;
+  border-radius: 9999px;
+  transition: width 0.3s ease-in-out;
+}
+
+/* Resume button in header */
+.ch-resume-header-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #3b82f6;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+
+.ch-resume-header-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Popup overlay */
+.ch-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Popup card */
+.ch-popup-card {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.ch-popup-icon {
+  color: #3b82f6;
+  margin-bottom: 16px;
+}
+
+.ch-popup-card h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.ch-popup-resume-btn {
+  width: 100%;
+  background-color: #facc15;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 0;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.ch-popup-resume-btn:hover {
+  background-color: #f59e0b;
+}
+
+/* Checkbox */
+.ch-popup-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.ch-popup-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}

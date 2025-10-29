@@ -1,0 +1,113 @@
+/* General container */
+.coursepage-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main flex layout */
+.coursepage-main {
+  display: flex;
+  height: calc(100vh - 80px);
+}
+
+/* Sidebar */
+.coursepage-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Tabs */
+.coursepage-tabcontent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* Lesson wrapper */
+.coursepage-lesson-wrapper {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+/* Comments */
+.coursepage-comments-wrapper {
+  max-width: 1024px;
+  margin: 32px auto 0 auto;
+  padding-top: 32px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Enroll section */
+.coursepage-enroll-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.coursepage-enroll-wrapper h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.coursepage-enroll-wrapper p {
+  color: #4b5563;
+  margin-bottom: 16px;
+}
+
+.coursepage-enroll-wrapper button {
+  padding: 12px 24px;
+  font-weight: 500;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.coursepage-enroll-wrapper button:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.coursepage-enroll-wrapper button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading spinner */
+.coursepage-loading-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coursepage-loading-box {
+  text-align: center;
+}
+
+.coursepage-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2563eb;
+  border-radius: 50%;
+  margin: 0 auto 16px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error */
+.coursepage-error {
+  color: #dc2626;
+  margin-top: 8px;
+}

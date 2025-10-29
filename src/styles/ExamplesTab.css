@@ -1,0 +1,195 @@
+/* ====== Examples Container ====== */
+.examples-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ====== Header ====== */
+.examples-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+/* ====== Example Navigation Buttons ====== */
+.examples-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.examples-nav button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  background-color: #f3f4f6;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.examples-nav button.active,
+.examples-nav button:hover {
+  background-color: #ffffff;
+  color: #2563eb;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ====== Example Card ====== */
+.examples-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.examples-card-header {
+  background-color: #f9fafb;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.examples-card-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.examples-card-header p {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ====== Code Box ====== */
+.examples-code-box {
+  background-color: #1f2937;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.examples-code-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #111827;
+}
+
+.examples-code-topbar span {
+  color: #d1d5db;
+  font-size: 0.85rem;
+}
+
+.copy-btn {
+  font-size: 0.85rem;
+  color: #d1d5db;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.copy-btn:hover {
+  color: #ffffff;
+}
+
+.copy-btn.copied {
+  color: #10b981; /* green when copied */
+}
+
+/* Code Pre */
+.examples-code-pre {
+  padding: 1rem;
+  color: #34d399;
+  overflow-x: auto;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  background-color: #1f2937;
+}
+
+/* ====== Output Section ====== */
+.examples-output {
+  background-color: #f3f4f6;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+  color: #111827;
+}
+
+/* ====== Explanation Section ====== */
+.examples-explanation p {
+  font-size: 0.95rem;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* ====== Navigation Buttons ====== */
+.examples-nav-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.examples-nav-btns button {
+  padding: 0.5rem 1rem;
+  background-color: #f3f4f6;
+  color: #111827;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.examples-nav-btns button:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.examples-nav-btns button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.examples-page-number {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* ====== Empty State ====== */
+.examples-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
+}
+
+.examples-empty h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.examples-empty p {
+  font-size: 1rem;
+  color: #9ca3af;
+}
+
+.examples-empty-icon svg {
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+  color: #d1d5db;
+}

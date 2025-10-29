@@ -1,0 +1,43 @@
+.codingtab-container { max-width: 1200px; margin: 0 auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; } 
+.problem-tabs { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; }
+ .problem-tab { padding: 0.5rem 1rem; border-radius: 0.5rem; background-color: #e2e8f0; color: #374151; cursor: pointer; transition: all 0.2s; white-space: nowrap; } 
+ .problem-tab.active { background-color: #2563eb; color: white; } .codingtab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .problem-details { display: flex; flex-direction: column; } 
+  .problem-card { background: white; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; }
+   .problem-title { font-size: 1.5rem; font-weight: bold; color: #111827; }
+    .problem-description { font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem; } 
+    .coding-section { display: flex; flex-direction: column; gap: 0.5rem; } 
+    .tab-buttons { display: flex; gap: 0.5rem; } 
+    .tab-button { padding: 0.5rem 1rem; border-radius: 0.5rem; background-color: #e5e7eb; color: #374151; cursor: pointer; transition: all 0.2s; }
+     .tab-button.active { background-color: #2563eb; color: white; } 
+     .editor-container { display: flex; flex-direction: column; border-radius: 0.5rem; overflow: hidden; background-color: #1f2937; max-height: 60vh; min-height: 300px; } 
+     .editor-header { display: flex; justify-content: space-between; padding: 0.5rem; color: #e5e7eb; font-size: 0.875rem; } .editor-actions button { margin-right: 0.5rem; padding: 0.25rem 0.5rem; background-color: #374151; color: white; border-radius: 0.25rem; cursor: pointer; }
+      .editor-language { font-size: 0.75rem; }
+      .editor-buttons { display: flex; gap: 0.5rem; padding: 0.5rem; } .editor-buttons button { padding: 0.5rem 1rem; border-radius: 0.25rem; border: none; color: white; cursor: pointer; }
+       .editor-buttons button:first-child { background-color: #16a34a; } .editor-buttons button:first-child:hover { background-color: #15803d; } .editor-buttons button:last-child { background-color: #2563eb; }
+        .editor-buttons button:last-child:hover { background-color: #1d4ed8; } .output-console { background-color: #111827; color: #22c55e; font-family: monospace; font-size: 0.875rem; padding: 1rem; border-radius: 0.5rem; white-space: pre-wrap; max-height: 60vh; overflow-y: auto; } .testcases-wrapper { display: flex; flex-direction: column; gap: 0.5rem; max-height: 60vh; overflow-y: auto; }
+         .testcase-card { display: flex; justify-content: space-between; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; background-color: #f9fafb; }
+          .testcase-card.passed { border-color: #22c55e; background-color: #ecfdf5; }
+           .testcase-card.failed { border-color: #ef4444; background-color: #fef2f2; }
+            .testcase-content .mono { font-family: monospace; }
+             .testcase-result { font-weight: bold; } @media (max-width: 768px) { .codingtab-grid { grid-template-columns: 1fr; } .editor-container, .output-console, .testcases-wrapper { max-height: 50vh; } }
+             .language-switcher {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.lang-button {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #cbd5e1; /* gray-300 */
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.75rem;
+}
+
+.lang-button.active {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+}

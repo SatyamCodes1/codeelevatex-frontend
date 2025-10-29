@@ -1,0 +1,398 @@
+/* ========== 🌈 DASHBOARD MAIN STYLING ========== */
+.dashboard {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  font-family: "Poppins", sans-serif;
+  color: #1f2937;
+}
+
+.dashboard__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+}
+
+/* ========== 👋 WELCOME SECTION ========== */
+.dashboard__welcome h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard__welcome p {
+  color: #6b7280;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* ========== 📊 STATS CARD TABS ========== */
+.dashboard__stats-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.dashboard__card-tab {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1.2rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  width: 300px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard__card-tab:hover {
+  transform: translateY(-3px);
+  border-color: #3b82f6;
+}
+
+.dashboard__card-tab.active {
+  background: #3b82f6;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard__card-tab .icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard__card-tab p {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.dashboard__card-tab span {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 0.3rem;
+}
+
+/* ========== 🎓 COURSE GRID ========== */
+.dashboard__courses h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  color: #111827;
+  text-align: center;
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.5rem;
+}
+
+.course-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+  transition: 0.3s ease all;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.course-icon {
+  font-size: 2rem;
+  margin-bottom: 0.6rem;
+}
+
+.course-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.course-card p {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* ========== 📈 PROGRESS BAR ========== */
+.course-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+}
+
+.progress-bar {
+  width: 80%;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-right: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #6a11cb);
+  transition: width 0.5s ease;
+}
+
+/* ========== 🎬 BUTTONS ========== */
+.btn-resume,
+.btn-claim,
+.btn-back {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 9999px; /* fully rounded buttons */
+  padding: 0.4rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+/* Shorter Resume Button (half length) */
+.btn-resume {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 9999px; /* fully rounded */
+  padding: 0.8rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s;
+  width: 180px; /* short length */
+  display: block;
+  margin: 0 auto; /* centers the button horizontally */
+  text-align: center;
+}
+.btn-resume:hover,
+.btn-claim:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.btn-back {
+  background: #9ca3af;
+  margin-top: 0.8rem;
+}
+
+.btn-back:hover {
+  background: #6b7280;
+  transform: translateY(-2px);
+}
+
+
+/* ========== 🪪 CERTIFICATES ========== */
+.dashboard__certificates h2 {
+  text-align: center;
+  font-size: 1.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.certificate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.certificate-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.certificate-card.completed {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  opacity: 1;
+}
+
+.certificate-card.in-progress {
+  opacity: 0.8;
+}
+
+.certificate-card:hover {
+  transform: translateY(-3px);
+  border-color: #3b82f6;
+}
+
+.certificate-card .certificate-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ========== 🪪 CERTIFICATE PREVIEW ========== */
+.certificate-details {
+  max-width: 750px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  text-align: center;
+  font-family: "Georgia", serif;
+  border: 2px solid #3b82f6;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  position: relative;
+
+}
+
+
+.certificate-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-25deg);
+  font-size: 6rem;
+  color: rgba(59,130,246,0.08);
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.certificate-details h3 {
+  margin: 0.8rem 0;
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+.certificate-details p {
+  font-size: 1.1rem;
+  margin: 0.4rem 0;
+  color: #1f2937;
+}
+
+/* Top center logo */
+.certificate-logo {
+  width: 120px;           /* adjust size */
+  height: auto;
+  display: block;
+  margin: 20px auto 10px auto; /* top margin 20px, bottom margin 10px, centered horizontally */
+  position: relative;     /* keep it in flow */
+}
+
+/* Gold Stamp in preview */
+/* ========== 🏅 GOLD CIRCULAR STAMP ========== */
+.certificate-stamp-container {
+  position: absolute;        /* position on certificate */
+  bottom: 90px;              /* distance from bottom */
+  right: 70px;               /* distance from right */
+  width: 120px;              /* circle width */
+  height: 120px;             /* circle height */
+  pointer-events: none;      /* prevent clicks */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;               /* make sure it’s above other elements */
+}
+
+.certificate-stamp {
+  width: 100%;
+  height: 100%;
+  border: 4px solid #d4af37;   /* gold border */
+  border-radius: 50%;           /* make it circular */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotate(-20deg);    /* rotate the text slightly */
+  font-weight: bold;
+  color: #d4af37;
+  font-size: 14px;
+  text-align: center;
+  box-sizing: border-box;
+  line-height: 1.2;
+  background: rgba(255, 255, 255, 0.1); /* subtle inner background for contrast */
+  padding: 10px;                 /* ensures text doesn’t touch the border */
+        /* optional: make text uppercase for stamp style */
+}
+
+
+/* ========== ⚡ QUICK ACTIONS ========== */
+.dashboard__quick-actions {
+  margin-top: 3rem;
+}
+
+.dashboard__quick-actions h2 {
+  text-align: center;
+  margin-bottom: 1.2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.dashboard__quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.5rem;
+}
+
+.quick-action-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.2s;
+}
+
+.quick-action-card:hover {
+  background: #f9fafc;
+  transform: translateY(-4px);
+}
+
+.quick-action-card span {
+  font-size: 1.8rem;
+  margin-right: 0.8rem;
+}
+
+/* ========== ⏳ LOADING SCREEN ========== */
+.dashboard-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.spinner {
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========== 💻 RESPONSIVE STUFF ========== */
+@media (max-width: 768px) {
+  .dashboard__quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+  .dashboard__welcome h1 {
+    font-size: 1.6rem;
+  }
+  .dashboard__stats-tabs {
+    gap: 0.5rem;
+  }
+}

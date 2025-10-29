@@ -1,0 +1,105 @@
+.tab-navigation {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 0 0 1rem 1rem;
+}
+
+.tab-navigation__container {
+  max-width: 1120px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.tab-navigation__tabs {
+  display: flex;
+  gap: 1.25rem;
+  padding: 0.75rem 1.25rem;
+  position: relative;
+  min-width: max-content;
+}
+
+.tab-navigation__button {
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #374151; /* dark gray text */
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+  border-radius: 0.75rem;
+}
+
+.tab-navigation__button:hover {
+  color: #1e40af; /* subtle hover */
+  background: rgba(37, 99, 235, 0.06);
+  transform: translateY(-1px);
+}
+
+.tab-navigation__button.active {
+  color: #111827; /* slightly darker text */
+  background: rgba(59, 130, 246, 0.1); /* subtle light glass-blue tint */
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15); /* soft glow */
+  transform: translateY(-1px);
+  backdrop-filter: blur(10px); /* subtle glass effect on active tab */
+}
+
+.tab-navigation__icon {
+  font-size: 1.125rem;
+  transition: transform 0.3s ease;
+}
+
+.tab-navigation__button:hover .tab-navigation__icon,
+.tab-navigation__button.active .tab-navigation__icon {
+  transform: scale(1.1);
+}
+
+/* Remove underline completely */
+.tab-navigation__underline {
+  display: none !important;
+}
+
+.tab-navigation::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tab-navigation::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.15);
+  border-radius: 3px;
+}
+
+.tab-navigation::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.25);
+}
+
+.tab-navigation::after,
+.tab-navigation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 2rem;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tab-navigation::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 1), transparent);
+}
+
+.tab-navigation::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 1), transparent);
+}

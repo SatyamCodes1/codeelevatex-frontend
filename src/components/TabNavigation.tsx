@@ -38,21 +38,34 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
+  // ✅ FIXED: Added API base URL
+  const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
   // ---------------- FETCH PROGRESS ----------------
   useEffect(() => {
     if (!courseId || !token) return;
 
     const fetchProgress = async () => {
       try {
-        const res = await API.get(`/progress/course/${courseId}`, {
-          headers: { Authorization: `Bearer ${token}` },
+        // ✅ FIXED: Using fetch with /api prefix instead of API.get
+        const res = await fetch(`${API_BASE}/api/progress/course/${courseId}`, {
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
         });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
 
         const completed: string[] = [];
         const statuses: Record<string, boolean> = {};
 
-        if (res.data.progress?.detailedProgress) {
-          res.data.progress.detailedProgress.forEach((p: any) => {
+        if (data.progress?.detailedProgress) {
+          data.progress.detailedProgress.forEach((p: any) => {
             let isCompleted = p.status === 'completed';
 
             // Check coding submissions
@@ -84,12 +97,12 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
           onProgressUpdate?.(completed, overallPercentage);
         }
       } catch (err: any) {
-        console.error('[TabNavigation] Fetch progress error:', err.response?.data || err.message);
+        console.error('[TabNavigation] Fetch progress error:', err);
       }
     };
 
     fetchProgress();
-  }, [courseId, token, tabs, onProgressUpdate]);
+  }, [courseId, token, tabs, onProgressUpdate, API_BASE]);
 
   // ---------------- UNDERLINE ----------------
   const updateUnderline = () => {

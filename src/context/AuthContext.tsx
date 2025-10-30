@@ -36,7 +36,6 @@ const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 githubProvider.addScope("user:email");
 
-// ✅ FIXED: Removed /api from base URL
 const API_BASE_URL =
   process.env.REACT_APP_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
 
@@ -57,7 +56,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
 
       try {
-        // ✅ FIXED: Added /api prefix
         const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
           headers: {
             Authorization: `Bearer ${savedToken}`,
@@ -77,7 +75,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           setUser(authUser);
           setToken(savedToken);
         } else {
-          // Token invalid - clear storage
           console.warn("Auth token validation failed, clearing auth data");
           localStorage.removeItem("authToken");
           localStorage.removeItem("authUser");
@@ -111,7 +108,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async ({ email, password }: { email: string; password: string }) => {
     setLoading(true);
     try {
-      // ✅ FIXED: Added /api prefix
       const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -151,10 +147,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     email: string;
     password: string;
   }) => {
-    setLoading(true);
     try {
       console.log("Registering new user...", email);
-      // ✅ FIXED: Added /api prefix
       const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -164,13 +158,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const data = await res.json();
       console.log("Register response:", data);
 
-      if (!res.ok) throw new Error(data.message || "Registration failed");
+      if (!res.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+      
       return true;
     } catch (err) {
       console.error("Register error:", err);
-      return false;
-    } finally {
-      setLoading(false);
+      throw err;
     }
   };
 
@@ -179,7 +174,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setLoading(true);
     try {
       console.log("Verifying OTP for:", email, otp);
-      // ✅ FIXED: Added /api prefix
       const res = await fetch(`${API_BASE_URL}/api/auth/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -191,7 +185,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (!res.ok) throw new Error(responseData.message || "Invalid OTP");
 
-      const userData = responseData.data;
+      const userData = responseData.user;
       const authUser: AuthUser = {
         id: userData._id ?? userData.id ?? Date.now().toString(),
         name: userData.name,
@@ -212,10 +206,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Resend OTP
   const resendOtp = async (email: string): Promise<boolean> => {
-    setLoading(true);
     try {
       console.log("Resending OTP to:", email);
-      // ✅ FIXED: Added /api prefix
       const res = await fetch(`${API_BASE_URL}/api/auth/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -229,9 +221,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return true;
     } catch (err) {
       console.error("Resend OTP error:", err);
-      return false;
-    } finally {
-      setLoading(false);
+      throw err;
     }
   };
 
@@ -254,7 +244,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const userEmail = firebaseUser.email || `${firebaseUser.uid}@social.fake`;
       const userName = firebaseUser.displayName || "User";
 
-      // ✅ FIXED: Added /api prefix
       const res = await fetch(`${API_BASE_URL}/api/auth/social-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

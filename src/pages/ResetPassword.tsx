@@ -4,29 +4,41 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
+
+
 const ResetPassword: React.FC = () => {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
   const { setAuthData } = useAuth();
+
+
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [tokenValid, setTokenValid] = useState(true);
 
+
+
   const [passwordValid, setPasswordValid] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [shake, setShake] = useState(false);
+
+
 
   useEffect(() => {
     setPasswordValid(password.length >= 6);
     setPasswordsMatch(password === confirmPassword);
   }, [password, confirmPassword]);
 
+
+
   const handleShake = () => {
     setShake(true);
     setTimeout(() => setShake(false), 500);
   };
+
+
 
   const handleResetPassword = async () => {
     if (!passwordValid || !passwordsMatch) {
@@ -36,23 +48,35 @@ const ResetPassword: React.FC = () => {
       return;
     }
 
+
+
     setLoading(true);
     try {
-      const apiUrl = process.env.REACT_APP_API_URL?.replace(/\/$/, "") || "http://localhost:5000/api";
-      const res =  await fetch(`${apiUrl}/auth/reset-password/${token}`, {
+      const apiUrl = (process.env.REACT_APP_API_URL?.replace(/\/$/, "") || "http://localhost:5000") + "/api";
+
+
+      const res = await fetch(`${apiUrl}/auth/reset-password/${token}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password, confirmPassword }),
       });
 
+
+
       const data = await res.json();
+
+
 
       if (!res.ok) {
         if (res.status === 400) setTokenValid(false);
         throw new Error(data.message || "Failed to reset password");
       }
 
+
+
       toast.success("Password reset successfully! Logging you in...");
+
+
 
       // Auto-login after successful reset
       if (data.token && data.user) {
@@ -68,6 +92,8 @@ const ResetPassword: React.FC = () => {
         );
       }
 
+
+
       setTimeout(() => {
         navigate(data.user.role === "admin" ? "/admin" : "/home", { replace: true });
       }, 1500);
@@ -79,6 +105,8 @@ const ResetPassword: React.FC = () => {
       setLoading(false);
     }
   };
+
+
 
   if (!tokenValid) {
     return (
@@ -102,6 +130,8 @@ const ResetPassword: React.FC = () => {
     );
   }
 
+
+
   return (
     <div className="login-wrapper">
       <div className="login-card">
@@ -110,6 +140,8 @@ const ResetPassword: React.FC = () => {
           <p style={{ textAlign: "center", color: "#666", marginBottom: "20px", fontSize: "14px" }}>
             Enter your new password below
           </p>
+
+
 
           <input
             type="password"
@@ -122,6 +154,8 @@ const ResetPassword: React.FC = () => {
             <p className="error-text">Password must be ≥ 6 characters</p>
           )}
 
+
+
           <input
             type="password"
             placeholder="Confirm New Password"
@@ -133,6 +167,8 @@ const ResetPassword: React.FC = () => {
             <p className="error-text">Passwords do not match</p>
           )}
 
+
+
           <button
             className="submit-btn big-btn"
             onClick={handleResetPassword}
@@ -140,6 +176,8 @@ const ResetPassword: React.FC = () => {
           >
             {loading ? "Resetting..." : "Reset Password"}
           </button>
+
+
 
           <button
             className="submit-btn"
@@ -153,5 +191,7 @@ const ResetPassword: React.FC = () => {
     </div>
   );
 };
+
+
 
 export default ResetPassword;

@@ -23,6 +23,9 @@ const PaymentPage: FC<PaymentPageProps> = ({ courses }) => {
   const courseId = id || "";
   const STORAGE_KEY = "lastCourse";
 
+  // ✅ FIXED: API base URL
+  const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
   const [course, setCourse] = useState<CourseType | null>(null);
   const [status, setStatus] = useState<"idle" | "processing" | "success" | "failed">("idle");
   const [loading, setLoading] = useState(true);
@@ -69,7 +72,8 @@ const PaymentPage: FC<PaymentPageProps> = ({ courses }) => {
         }
         let foundCourse = courses.find((c) => c._id === courseId || c.id === courseId) ?? null;
         if (!foundCourse) {
-          const res = await fetch(`${process.env.REACT_APP_API_URL}/courses/${courseId}`);
+          // ✅ FIXED: Added /api prefix
+          const res = await fetch(`${API_BASE}/api/courses/${courseId}`);
           if (!res.ok) throw new Error("Course not found");
           const data = await res.json();
           foundCourse = {
@@ -92,7 +96,7 @@ const PaymentPage: FC<PaymentPageProps> = ({ courses }) => {
       }
     };
     loadCourse();
-  }, [courses, courseId]);
+  }, [courses, courseId, API_BASE]);
 
   const handlePayment = async () => {
     if (!course) return;
@@ -122,7 +126,8 @@ const PaymentPage: FC<PaymentPageProps> = ({ courses }) => {
     try {
       console.log("Creating Razorpay order with userId:", userId);
 
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/payment/create-order`, {
+      // ✅ FIXED: Added /api prefix
+      const res = await fetch(`${API_BASE}/api/payment/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -155,7 +160,8 @@ const PaymentPage: FC<PaymentPageProps> = ({ courses }) => {
         handler: async (response: any) => {
           console.log("✅ Payment successful, verifying...");
           try {
-            const verifyRes = await fetch(`${process.env.REACT_APP_API_URL}/payment/verify-payment`, {
+            // ✅ FIXED: Added /api prefix
+            const verifyRes = await fetch(`${API_BASE}/api/payment/verify-payment`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({

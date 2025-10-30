@@ -119,7 +119,7 @@ const CoursePage: React.FC = () => {
     localStorage.setItem(`activeTab-${courseId}`, activeTab);
   }, [activeTab, courseId]);
 
-  // ✅ Fetch lesson content - prevent infinite calls
+  // ✅ FIXED: Get lesson content from already-loaded course data (no API call)
   useEffect(() => {
     if (!currentLesson || !isEnrolled) {
       setLessonContent(null);
@@ -128,43 +128,56 @@ const CoursePage: React.FC = () => {
 
     setContentLoading(true);
 
-    fetch(`${process.env.REACT_APP_API_URL}/lessons/${currentLesson._id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        ...(userToken && { Authorization: `Bearer ${userToken}` }),
-      },
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return response.json();
-      })
-      .then((data) => {
-        console.log("[CoursePage] Lesson content loaded");
-        const content: LessonContent = {
-          explanation: data.lesson?.explanation || data.explanation || [],
-          examples: data.lesson?.examples || data.examples || [],
-          quiz: data.lesson?.quiz || data.quiz || [],
-          coding: data.lesson?.coding || data.coding || [],
-        };
-        setLessonContent(content);
-      })
-      .catch((err) => {
-        console.error("[CoursePage] Error fetching content:", err);
-        // Fallback to lesson object content
-        if (currentLesson.content) {
-          setLessonContent(currentLesson.content);
-        } else {
-          setLessonContent({
-            explanation: [],
-            examples: [],
-            quiz: [],
-            coding: [],
-          });
+    // Get lesson content from the currentCourse that's already loaded
+    if (currentCourse && currentCourse.units) {
+      let foundLesson = null;
+      
+      // Search through units to find the lesson with full content
+      for (const unit of currentCourse.units) {
+        const lesson = unit.lessons.find((l) => l._id === currentLesson._id);
+        if (lesson) {
+          foundLesson = lesson;
+          break;
         }
-      })
-      .finally(() => setContentLoading(false));
-  }, [currentLesson, isEnrolled, userToken]);
+      }
+
+      if (foundLesson) {
+        console.log("[CoursePage] Lesson content loaded from course data:", {
+          lessonId: foundLesson._id,
+          title: foundLesson.title,
+          hasContent: !!foundLesson.content
+        });
+
+        // Extract content from the lesson
+        const content: LessonContent = {
+          explanation: foundLesson.content?.explanation || [],
+          examples: foundLesson.content?.examples || [],
+          quiz: foundLesson.content?.quiz || [],
+          coding: foundLesson.content?.coding || [],
+        };
+
+        setLessonContent(content);
+      } else {
+        console.warn("[CoursePage] Lesson not found in course data");
+        setLessonContent({
+          explanation: [],
+          examples: [],
+          quiz: [],
+          coding: [],
+        });
+      }
+    } else {
+      console.warn("[CoursePage] No course data available");
+      setLessonContent({
+        explanation: [],
+        examples: [],
+        quiz: [],
+        coding: [],
+      });
+    }
+
+    setContentLoading(false);
+  }, [currentLesson, isEnrolled, currentCourse]);
 
   // Sync completed lessons from progress
   useEffect(() => {

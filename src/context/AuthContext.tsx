@@ -1,5 +1,4 @@
-// src/context/AuthContext.tsx
-import React, { createContext, useContext, ReactNode, useState } from "react";
+import React, { createContext, useContext, ReactNode, useState, useEffect } from "react";
 import { auth } from "../firebase";
 import {
   signInWithPopup,
@@ -28,6 +27,7 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<void>;
   loginWithGithub: () => Promise<void>;
   loading: boolean;
+  isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,19 +36,68 @@ const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 githubProvider.addScope("user:email");
 
-// 🌍 Define global API base URL (auto switches between local & deployed)
 const API_BASE_URL =
   process.env.REACT_APP_API_URL?.replace(/\/$/, "") || "http://localhost:5000/api";
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<AuthUser | null>(() => {
-    const stored = localStorage.getItem("authUser");
-    return stored ? JSON.parse(stored) : null;
-  });
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem("authToken"));
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  // ----------------- Helper -----------------
+  // Initialize auth state from localStorage on mount
+  useEffect(() => {
+    const initAuth = async () => {
+      const savedToken = localStorage.getItem("authToken");
+      const savedUser = localStorage.getItem("authUser");
+
+      if (!savedToken || !savedUser) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Verify token with backend
+        const res = await fetch(`${API_BASE_URL}/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${savedToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const authUser: AuthUser = {
+            id: data.user._id || data.user.id,
+            name: data.user.name,
+            email: data.user.email,
+            role: data.user.role || "user",
+            avatar: data.user.avatar,
+          };
+          setUser(authUser);
+          setToken(savedToken);
+        } else {
+          // Token invalid - clear storage
+          console.warn("Auth token validation failed, clearing auth data");
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("authUser");
+          setUser(null);
+          setToken(null);
+        }
+      } catch (err) {
+        console.error("Auth restoration failed:", err);
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("authUser");
+        setUser(null);
+        setToken(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initAuth();
+  }, []);
+
+  // Helper
   const setAuthData = (authUser: AuthUser, authToken: string) => {
     console.log("Setting auth data:", authUser, authToken);
     setUser(authUser);
@@ -57,7 +106,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.setItem("authToken", authToken);
   };
 
-  // ----------------- Email/Password Login -----------------
+  // Email/Password Login
   const login = async ({ email, password }: { email: string; password: string }) => {
     setLoading(true);
     try {
@@ -66,18 +115,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
       const data = await res.json();
       console.log("Login response:", data);
 
       if (!res.ok) throw new Error(data.message || "Invalid credentials");
 
       const authUser: AuthUser = {
-        id: data.user.id ?? data.user._id,
+        id: data.user._id ?? data.user.id,
         name: data.user.name,
         email: data.user.email,
         role: data.user.role || "user",
         avatar: data.user.avatar,
       };
+
       setAuthData(authUser, data.token);
       return authUser;
     } catch (err) {
@@ -88,8 +139,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  // ----------------- Registration (send OTP only) -----------------
-  const register = async ({ name, email, password }: { name: string; email: string; password: string }) => {
+  // Registration (send OTP only)
+  const register = async ({
+    name,
+    email,
+    password,
+  }: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
     setLoading(true);
     try {
       console.log("Registering new user...", email);
@@ -102,10 +161,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const data = await res.json();
       console.log("Register response:", data);
 
-      if (!res.ok) {
-        throw new Error(data.message || "Registration failed");
-      }
-
+      if (!res.ok) throw new Error(data.message || "Registration failed");
       return true;
     } catch (err) {
       console.error("Register error:", err);
@@ -115,7 +171,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  // ----------------- Verify OTP -----------------
+  // Verify OTP
   const verifyOtp = async (email: string, otp: string) => {
     setLoading(true);
     try {
@@ -133,12 +189,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       const userData = responseData.data;
       const authUser: AuthUser = {
-        id: userData.id ?? userData._id ?? Date.now().toString(),
+        id: userData._id ?? userData.id ?? Date.now().toString(),
         name: userData.name,
         email: userData.email,
         role: userData.role || "user",
         avatar: userData.avatar,
       };
+
       setAuthData(authUser, responseData.token);
       return authUser;
     } catch (err: any) {
@@ -149,7 +206,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  // ----------------- Resend OTP -----------------
+  // Resend OTP
   const resendOtp = async (email: string): Promise<boolean> => {
     setLoading(true);
     try {
@@ -164,7 +221,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.log("Resend OTP response:", data);
 
       if (!res.ok) throw new Error(data.message || "Failed to resend OTP");
-
       return true;
     } catch (err) {
       console.error("Resend OTP error:", err);
@@ -174,7 +230,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  // ----------------- Logout -----------------
+  // Logout
   const logout = () => {
     console.log("Logging out user");
     setUser(null);
@@ -183,7 +239,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem("authToken");
   };
 
-  // ----------------- Social Login -----------------
+  // Social Login
   const handleSocialLogin = async (provider: GoogleAuthProvider | GithubAuthProvider) => {
     setLoading(true);
     try {
@@ -199,23 +255,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         body: JSON.stringify({
           email: userEmail,
           name: userName,
-          avatar: firebaseUser.photoURL || "",
+          avatar: firebaseUser.photoURL,
           provider: provider instanceof GoogleAuthProvider ? "google" : "github",
           providerId: firebaseUser.uid,
         }),
       });
+
       const data = await res.json();
       console.log("Social login response:", data);
 
       if (!res.ok) throw new Error(data.message || "Social login failed");
 
       const authUser: AuthUser = {
-        id: data.user.id ?? data.user._id ?? Date.now().toString(),
+        id: data.user._id ?? data.user.id ?? Date.now().toString(),
         name: data.user.name,
         email: data.user.email,
         role: data.user.role || "user",
         avatar: data.user.avatar,
       };
+
       setAuthData(authUser, data.token);
     } catch (err) {
       console.error("Social login error:", err);
@@ -241,6 +299,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         loginWithGoogle,
         loginWithGithub,
         loading,
+        isAuthenticated: !!user && !!token,
       }}
     >
       {children}
@@ -248,9 +307,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
   return context;
 };
 

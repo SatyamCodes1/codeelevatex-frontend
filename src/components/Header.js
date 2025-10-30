@@ -16,11 +16,15 @@ const Header = () => {
 
   const tickingRef = useRef(false);
   const lastActiveRef = useRef("home");
+  const navMenuRef = useRef(null);
+  const lastScrollY = useRef(0);
 
   const toggleMenu = () => setIsMenuOpen((s) => !s);
+  const closeMenu = () => setIsMenuOpen(false);
 
   const handleLogout = () => {
     logout();
+    closeMenu();
     navigate("/login");
   };
 
@@ -36,13 +40,11 @@ const Header = () => {
 
   const handleClick = (e, id) => {
     e.preventDefault();
-    if (isMenuOpen) setIsMenuOpen(false);
+    closeMenu();
 
     if (id === "dashboard") {
       if (location.pathname !== "/dashboard") {
-        // 👇 Navigate first
         navigate("/dashboard");
-        // 👇 Force scrollTop after navigation
         setTimeout(() => window.scrollTo({ top: 0, behavior: "instant" }), 50);
       }
       setActiveSection(id);
@@ -87,14 +89,63 @@ const Header = () => {
     }
   };
 
-  // 🧠 Prevent scroll restoration by browser
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isMenuOpen &&
+        navMenuRef.current &&
+        !navMenuRef.current.contains(event.target) &&
+        !event.target.closest('.nav-toggle')
+      ) {
+        closeMenu();
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  // Close menu when user scrolls (NEW FIX)
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Close menu if user scrolls more than 50px
+      if (isMenuOpen && Math.abs(currentScrollY - lastScrollY.current) > 50) {
+        closeMenu();
+      }
+      
+      lastScrollY.current = currentScrollY;
+    };
+
+    if (isMenuOpen) {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+    }
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isMenuOpen]);
+
+  // Close menu when route changes (NEW FIX)
+  useEffect(() => {
+    closeMenu();
+  }, [location.pathname]);
+
+  // Prevent scroll restoration by browser
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
   }, []);
 
-  // 🧭 When route changes TO dashboard, force scrollTop = 0
+  // When route changes TO dashboard, force scrollTop = 0
   useEffect(() => {
     if (location.pathname === "/dashboard") {
       window.scrollTo({ top: 0, behavior: "instant" });
@@ -161,7 +212,10 @@ const Header = () => {
           />
         </Link>
 
-        <ul className={`nav-menu ${isMenuOpen ? "active" : ""}`}>
+        <ul
+          ref={navMenuRef}
+          className={`nav-menu ${isMenuOpen ? "active" : ""}`}
+        >
           {[...SECTIONS, ...PAGE_LINKS].map((id) => (
             <li key={id}>
               <a
@@ -182,17 +236,31 @@ const Header = () => {
                 Logout
               </button>
             ) : (
-              <Link to="/login" className="login-btn">
+              <Link to="/login" className="login-btn" onClick={closeMenu}>
                 Login
               </Link>
             )}
           </li>
         </ul>
 
+        {/* User icon visible on desktop */}
+        {user && (
+          <div className="user-profile-desktop">
+            <div className="user-icon-desktop">
+              {(user.name || "U")
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase()}
+            </div>
+          </div>
+        )}
+
         <div className="nav-toggle" onClick={toggleMenu}>
           {user ? (
             <div className="user-icon">
-              {(user.name || "")
+              {(user.name || "U")
                 .split(" ")
                 .map((n) => n[0])
                 .join("")
@@ -200,7 +268,11 @@ const Header = () => {
                 .toUpperCase()}
             </div>
           ) : (
-            <span className="hamburger"></span>
+            <div className="hamburger">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           )}
         </div>
       </nav>

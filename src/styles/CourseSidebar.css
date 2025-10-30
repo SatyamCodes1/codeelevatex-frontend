@@ -1,10 +1,12 @@
-/* Sidebar container */
+/* ==================== SIDEBAR CONTAINER ==================== */
 .sidebar {
   width: 320px;
   background-color: #f9fafb;
   border-right: 1px solid #e5e7eb;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sidebar-inner {
@@ -24,14 +26,15 @@
   gap: 8px;
 }
 
-/* Unit */
+/* ==================== UNIT ==================== */
 .sidebar-unit {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   background-color: white;
+  overflow: hidden;
 }
 
-/* Unit header */
+/* ==================== UNIT HEADER ==================== */
 .unit-header {
   width: 100%;
   padding: 12px 16px;
@@ -42,17 +45,19 @@
   cursor: pointer;
   background: none;
   border: none;
+  transition: background-color 0.2s ease;
 }
 
 .unit-header:hover {
   background-color: #f3f4f6;
-  border-radius: 8px 8px 0 0;
 }
 
 .unit-header-left {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex: 1;
+  min-width: 0;
 }
 
 .unit-icon {
@@ -68,6 +73,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .unit-checkmark,
@@ -87,16 +93,22 @@
   justify-content: center;
   font-size: 0.625rem;
   color: #4b5563;
+  flex-shrink: 0;
 }
 
 .unit-info {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 0;
 }
 
 .unit-title {
   font-weight: 500;
   color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .unit-lessons-count {
@@ -104,19 +116,20 @@
   color: #6b7280;
 }
 
-/* Chevron */
+/* ==================== CHEVRON ==================== */
 .unit-chevron {
   width: 20px;
   height: 20px;
   color: #9ca3af;
-  transition: transform 0.3s;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .unit-chevron.rotated {
   transform: rotate(180deg);
 }
 
-/* Lessons */
+/* ==================== LESSONS ==================== */
 .unit-lessons {
   border-top: 1px solid #e5e7eb;
 }
@@ -131,7 +144,8 @@
   background: none;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
+  min-height: 48px;
 }
 
 .lesson-item:hover:not(.disabled) {
@@ -148,7 +162,7 @@
   cursor: not-allowed;
 }
 
-/* Lesson icons */
+/* ==================== LESSON ICONS ==================== */
 .lesson-icon {
   flex-shrink: 0;
 }
@@ -158,6 +172,7 @@
   height: 20px;
   background-color: #3b82f6;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .lesson-not-started {
@@ -165,9 +180,10 @@
   height: 20px;
   border: 2px solid #d1d5db;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
-/* Lesson info */
+/* ==================== LESSON INFO ==================== */
 .lesson-info {
   flex: 1;
   min-width: 0;
@@ -177,15 +193,18 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .lesson-title {
   font-size: 0.875rem;
   font-weight: 500;
   color: #111827;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 .lesson-preview {
@@ -194,6 +213,8 @@
   background-color: #dcfce7;
   padding: 2px 4px;
   border-radius: 9999px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .lesson-meta {
@@ -203,13 +224,405 @@
   margin-top: 4px;
   font-size: 0.75rem;
   color: #6b7280;
+  flex-wrap: wrap;
 }
 
 .lesson-meta-icon {
   display: inline-flex;
+  flex-shrink: 0;
 }
 
 .lesson-duration {
   font-size: 0.75rem;
   color: #6b7280;
+}
+
+/* ==================== SCROLLBAR STYLING ==================== */
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* ==================== TABLET RESPONSIVENESS (768px) ==================== */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    max-height: 400px;
+  }
+
+  .sidebar-inner {
+    padding: 14px;
+  }
+
+  .sidebar-title {
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+  }
+
+  .sidebar-units {
+    gap: 6px;
+  }
+
+  .unit-header {
+    padding: 11px 14px;
+  }
+
+  .unit-header-left {
+    gap: 10px;
+  }
+
+  .unit-completed-icon,
+  .lesson-completed {
+    width: 22px;
+    height: 22px;
+  }
+
+  .unit-checkmark,
+  .lesson-checkmark {
+    width: 14px;
+    height: 14px;
+  }
+
+  .unit-number {
+    width: 22px;
+    height: 22px;
+  }
+
+  .unit-title {
+    font-size: 0.95rem;
+  }
+
+  .unit-lessons-count {
+    font-size: 0.8rem;
+  }
+
+  .lesson-item {
+    padding: 11px 20px;
+    gap: 10px;
+    min-height: 44px;
+  }
+
+  .lesson-current,
+  .lesson-not-started {
+    width: 18px;
+    height: 18px;
+  }
+
+  .lesson-title {
+    font-size: 0.85rem;
+  }
+
+  .lesson-preview {
+    font-size: 0.6rem;
+    padding: 1px 3px;
+  }
+
+  .lesson-meta {
+    font-size: 0.7rem;
+    gap: 6px;
+  }
+
+  .lesson-duration {
+    font-size: 0.7rem;
+  }
+}
+
+/* ==================== MOBILE RESPONSIVENESS (576px) ==================== */
+@media (max-width: 576px) {
+  .sidebar {
+    width: 100%;
+    max-height: 350px;
+  }
+
+  .sidebar-inner {
+    padding: 12px;
+  }
+
+  .sidebar-title {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .sidebar-units {
+    gap: 6px;
+  }
+
+  .unit-header {
+    padding: 10px 12px;
+  }
+
+  .unit-header-left {
+    gap: 10px;
+  }
+
+  .unit-completed-icon,
+  .lesson-completed {
+    width: 20px;
+    height: 20px;
+  }
+
+  .unit-checkmark,
+  .lesson-checkmark {
+    width: 13px;
+    height: 13px;
+  }
+
+  .unit-number {
+    width: 20px;
+    height: 20px;
+    font-size: 0.6rem;
+  }
+
+  .unit-title {
+    font-size: 0.9rem;
+  }
+
+  .unit-lessons-count {
+    font-size: 0.75rem;
+  }
+
+  .unit-chevron {
+    width: 18px;
+    height: 18px;
+  }
+
+  .lesson-item {
+    padding: 10px 16px;
+    gap: 10px;
+    min-height: 44px;
+  }
+
+  .lesson-current,
+  .lesson-not-started {
+    width: 16px;
+    height: 16px;
+  }
+
+  .lesson-not-started {
+    border-width: 1.5px;
+  }
+
+  .lesson-title {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+
+  .lesson-preview {
+    font-size: 0.55rem;
+    padding: 1px 3px;
+  }
+
+  .lesson-meta {
+    font-size: 0.65rem;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .lesson-duration {
+    font-size: 0.65rem;
+  }
+}
+
+/* ==================== EXTRA SMALL MOBILE (360px) ==================== */
+@media (max-width: 360px) {
+  .sidebar {
+    max-height: 300px;
+  }
+
+  .sidebar-inner {
+    padding: 10px;
+  }
+
+  .sidebar-title {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .unit-header {
+    padding: 9px 10px;
+  }
+
+  .unit-header-left {
+    gap: 8px;
+  }
+
+  .unit-completed-icon,
+  .lesson-completed {
+    width: 18px;
+    height: 18px;
+  }
+
+  .unit-checkmark,
+  .lesson-checkmark {
+    width: 12px;
+    height: 12px;
+  }
+
+  .unit-number {
+    width: 18px;
+    height: 18px;
+    font-size: 0.55rem;
+  }
+
+  .unit-title {
+    font-size: 0.85rem;
+  }
+
+  .unit-lessons-count {
+    font-size: 0.7rem;
+  }
+
+  .unit-chevron {
+    width: 16px;
+    height: 16px;
+  }
+
+  .lesson-item {
+    padding: 9px 12px;
+    gap: 8px;
+  }
+
+  .lesson-current,
+  .lesson-not-started {
+    width: 14px;
+    height: 14px;
+  }
+
+  .lesson-title {
+    font-size: 0.75rem;
+  }
+
+  .lesson-preview {
+    font-size: 0.5rem;
+  }
+
+  .lesson-meta {
+    font-size: 0.6rem;
+    gap: 4px;
+  }
+}
+
+/* ==================== LANDSCAPE MODE (MOBILE) ==================== */
+@media (max-width: 768px) and (orientation: landscape) {
+  .sidebar {
+    max-height: 250px;
+  }
+
+  .sidebar-inner {
+    padding: 10px 12px;
+  }
+
+  .unit-header {
+    padding: 8px 12px;
+  }
+
+  .lesson-item {
+    padding: 8px 16px;
+    min-height: 40px;
+  }
+}
+
+/* ==================== TOUCH DEVICE OPTIMIZATIONS ==================== */
+@media (hover: none) and (pointer: coarse) {
+  .unit-header {
+    min-height: 48px;
+    padding: 12px 16px;
+  }
+
+  .lesson-item {
+    min-height: 48px;
+  }
+
+  .unit-header:active {
+    background-color: #e5e7eb;
+  }
+
+  .lesson-item:active:not(.disabled) {
+    background-color: #e5e7eb;
+  }
+}
+
+/* ==================== DARK MODE SUPPORT ==================== */
+@media (prefers-color-scheme: dark) {
+  .sidebar {
+    background-color: #1f2937;
+    border-right-color: #374151;
+  }
+
+  .sidebar-unit {
+    background-color: #111827;
+    border-color: #374151;
+  }
+
+  .unit-header:hover {
+    background-color: #374151;
+  }
+
+  .unit-title {
+    color: #f9fafb;
+  }
+
+  .unit-lessons-count {
+    color: #9ca3af;
+  }
+
+  .unit-lessons {
+    border-top-color: #374151;
+  }
+
+  .lesson-item:hover:not(.disabled) {
+    background-color: #374151;
+  }
+
+  .lesson-item.current {
+    background-color: #1e3a8a;
+    border-right-color: #60a5fa;
+  }
+
+  .lesson-title {
+    color: #f3f4f6;
+  }
+
+  .lesson-duration,
+  .lesson-meta {
+    color: #9ca3af;
+  }
+
+  .sidebar::-webkit-scrollbar-track {
+    background: #1f2937;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb {
+    background: #4b5563;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+}
+
+/* ==================== PREVENT OVERFLOW ==================== */
+.sidebar,
+.sidebar-inner,
+.sidebar-units,
+.sidebar-unit,
+.lesson-item,
+.unit-header {
+  max-width: 100%;
+  box-sizing: border-box;
 }

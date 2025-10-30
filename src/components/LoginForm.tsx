@@ -1,3 +1,4 @@
+// src/components/LoginForm.tsx
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -7,7 +8,6 @@ import { FaGithub } from "react-icons/fa";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_URL?.replace(/\/$/, "") || "http://localhost:5000/api";
-
 
 const LoginForm: React.FC = () => {
   const { user, login, register, verifyOtp, resendOtp, setAuthData, loginWithGoogle, loginWithGithub } = useAuth();
@@ -34,24 +34,16 @@ const LoginForm: React.FC = () => {
   const [canResend, setCanResend] = useState(false);
 
   const cardRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // ---------------- VALIDATION ----------------
+  // -------- VALIDATION --------
   useEffect(() => {
     setEmailValid(/\S+@\S+\.\S+/.test(email));
     setPasswordValid(password.length >= 6);
     if (isNewUser) setPasswordsMatch(password === confirmPassword);
   }, [email, password, confirmPassword, isNewUser]);
 
-  // ---------------- CLOSE CARD ON OUTSIDE CLICK ----------------
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (cardRef.current && !cardRef.current.contains(event.target as Node)) navigate("/");
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [navigate]);
-
-  // ---------------- RESEND TIMER ----------------
+  // -------- RESEND TIMER --------
   useEffect(() => {
     if (resendTimer > 0) {
       const interval = setInterval(() => {
@@ -67,19 +59,20 @@ const LoginForm: React.FC = () => {
     setShake(true);
     setTimeout(() => setShake(false), 500);
   };
+
   const handleConfirmShake = () => {
     setConfirmShake(true);
     setTimeout(() => setConfirmShake(false), 500);
   };
 
-  // ---------------- REDIRECT AFTER LOGIN ----------------
+  // -------- REDIRECT AFTER LOGIN --------
   useEffect(() => {
     if (!user) return;
     if (user.role === "admin") navigate("/admin", { replace: true });
-    else navigate("/home", { replace: true });
+    else navigate("/dashboard", { replace: true });
   }, [user, navigate]);
 
-  // ---------------- AUTH HANDLERS ----------------
+  // -------- AUTH HANDLERS --------
   const handleSubmit = async () => {
     if (!emailValid || !passwordValid || (isNewUser && (!passwordsMatch || !name))) {
       handleShake();
@@ -194,10 +187,19 @@ const LoginForm: React.FC = () => {
     setCanResend(false);
   };
 
-  // ---------------- JSX ----------------
+  const handleGoHome = () => {
+    navigate("/", { replace: true });
+  };
+
+  // -------- JSX --------
   return (
-    <div className="login-wrapper">
+    <div className="login-wrapper" ref={wrapperRef}>
       <div className="login-card" ref={cardRef}>
+        {/* Close/Home Button */}
+        <button className="login-close-btn" onClick={handleGoHome} title="Go to Home">
+          ✕
+        </button>
+
         <h2 className="login-title">
           {isNewUser ? "Create Account" : step === "reset" ? "Reset Password" : "Welcome Back"}
         </h2>
@@ -292,10 +294,10 @@ const LoginForm: React.FC = () => {
         {/* OTP Form */}
         {step === "otp" && (
           <div className="login-form fade-in">
-            <p style={{ textAlign: "center", marginBottom: "15px", color: "#666", fontSize: "14px" }}>
+            <p className="otp-instruction">
               Enter the 6-digit OTP sent to <strong>{email}</strong>
             </p>
-            
+
             <input
               type="text"
               placeholder="Enter OTP"
@@ -304,31 +306,22 @@ const LoginForm: React.FC = () => {
               className="input-field"
               maxLength={6}
             />
-            
+
             <button className="submit-btn big-btn" onClick={handleVerifyOtp} disabled={loading}>
               {loading ? "Verifying..." : "Verify OTP"}
             </button>
 
             {/* Resend OTP Section */}
-            <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <div className="resend-otp-section">
               {resendTimer > 0 ? (
-                <p style={{ fontSize: "14px", color: "#666", margin: "0" }}>
+                <p className="resend-timer">
                   Resend OTP in <strong>{resendTimer}s</strong>
                 </p>
               ) : (
                 <button
-                  className="submit-btn"
+                  className="submit-btn resend-btn"
                   onClick={handleResendOtp}
                   disabled={loading || !canResend}
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    fontSize: "16px",
-                    fontWeight: "600",
-                    background: canResend ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" : "#ccc",
-                    cursor: canResend ? "pointer" : "not-allowed",
-                    opacity: canResend ? "1" : "0.6",
-                  }}
                 >
                   {loading ? "Sending..." : "Resend OTP"}
                 </button>
@@ -336,16 +329,10 @@ const LoginForm: React.FC = () => {
             </div>
 
             <button
-              className="submit-btn"
+              className="submit-btn back-btn"
               onClick={() => {
                 setStep("credentials");
                 resetFields();
-              }}
-              style={{ 
-                marginTop: "15px", 
-                background: "#6c757d",
-                width: "100%",
-                padding: "12px"
               }}
             >
               Back to Signup

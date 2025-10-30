@@ -1,63 +1,81 @@
-/* General container */
+/* ==================== GENERAL CONTAINER ==================== */
 .coursepage-container {
   min-height: 100vh;
   background-color: #f9fafb;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
-/* Main flex layout */
+/* ==================== MAIN FLEX LAYOUT ==================== */
 .coursepage-main {
   display: flex;
   height: calc(100vh - 80px);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
-/* Sidebar */
+/* ==================== SIDEBAR ==================== */
 .coursepage-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  width: 100%;
 }
 
-/* Tabs */
+/* ==================== TABS ==================== */
 .coursepage-tabcontent {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 24px;
+  width: 100%;
+  max-width: 100%;
 }
 
-/* Lesson wrapper */
+/* ==================== LESSON WRAPPER ==================== */
 .coursepage-lesson-wrapper {
   max-width: 1024px;
   margin: 0 auto;
+  width: 100%;
+  padding: 0;
 }
 
-/* Comments */
+/* ==================== COMMENTS ==================== */
 .coursepage-comments-wrapper {
   max-width: 1024px;
   margin: 32px auto 0 auto;
   padding-top: 32px;
   border-top: 1px solid #e5e7eb;
+  width: 100%;
 }
 
-/* Enroll section */
+/* ==================== ENROLL SECTION ==================== */
 .coursepage-enroll-wrapper {
   flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+  text-align: center;
 }
 
 .coursepage-enroll-wrapper h3 {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 8px;
+  color: #111827;
 }
 
 .coursepage-enroll-wrapper p {
   color: #4b5563;
   margin-bottom: 16px;
+  font-size: 1rem;
 }
 
 .coursepage-enroll-wrapper button {
@@ -68,10 +86,18 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
 }
 
 .coursepage-enroll-wrapper button:hover:not(:disabled) {
   background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.coursepage-enroll-wrapper button:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .coursepage-enroll-wrapper button:disabled {
@@ -79,16 +105,18 @@
   cursor: not-allowed;
 }
 
-/* Loading spinner */
+/* ==================== LOADING SPINNER ==================== */
 .coursepage-loading-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 .coursepage-loading-box {
   text-align: center;
+  padding: 20px;
 }
 
 .coursepage-spinner {
@@ -106,8 +134,250 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Error */
+/* ==================== ERROR ==================== */
 .coursepage-error {
   color: #dc2626;
   margin-top: 8px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* ==================== TABLET RESPONSIVENESS (768px) ==================== */
+@media (max-width: 768px) {
+  .coursepage-main {
+    flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - 70px);
+  }
+
+  .coursepage-tabcontent {
+    padding: 20px 16px;
+    overflow-x: hidden;
+  }
+
+  .coursepage-lesson-wrapper {
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .coursepage-comments-wrapper {
+    margin: 24px auto 0 auto;
+    padding-top: 24px;
+    max-width: 100%;
+  }
+
+  .coursepage-enroll-wrapper {
+    padding: 16px;
+    min-height: 300px;
+  }
+
+  .coursepage-enroll-wrapper h3 {
+    font-size: 1.15rem;
+  }
+
+  .coursepage-enroll-wrapper p {
+    font-size: 0.95rem;
+  }
+
+  .coursepage-enroll-wrapper button {
+    padding: 11px 22px;
+    font-size: 0.95rem;
+  }
+
+  .coursepage-spinner {
+    width: 44px;
+    height: 44px;
+    border-width: 3px;
+  }
+}
+
+/* ==================== MOBILE RESPONSIVENESS (576px) ==================== */
+@media (max-width: 576px) {
+  .coursepage-container {
+    min-height: 100vh;
+  }
+
+  .coursepage-main {
+    height: auto;
+    min-height: calc(100vh - 65px);
+  }
+
+  .coursepage-tabcontent {
+    padding: 16px 12px;
+    overflow-x: hidden;
+  }
+
+  .coursepage-lesson-wrapper {
+    padding: 0;
+    width: 100%;
+  }
+
+  .coursepage-comments-wrapper {
+    margin: 20px auto 0 auto;
+    padding-top: 20px;
+    width: 100%;
+  }
+
+  .coursepage-enroll-wrapper {
+    padding: 12px;
+    min-height: 250px;
+  }
+
+  .coursepage-enroll-wrapper h3 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+  }
+
+  .coursepage-enroll-wrapper p {
+    font-size: 0.9rem;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+
+  .coursepage-enroll-wrapper button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .coursepage-loading-box {
+    padding: 16px;
+  }
+
+  .coursepage-spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 3px;
+    margin-bottom: 12px;
+  }
+
+  .coursepage-error {
+    font-size: 0.9rem;
+    padding: 0 12px;
+  }
+}
+
+/* ==================== EXTRA SMALL MOBILE (360px) ==================== */
+@media (max-width: 360px) {
+  .coursepage-tabcontent {
+    padding: 12px 10px;
+  }
+
+  .coursepage-enroll-wrapper {
+    padding: 10px;
+    min-height: 220px;
+  }
+
+  .coursepage-enroll-wrapper h3 {
+    font-size: 1rem;
+  }
+
+  .coursepage-enroll-wrapper p {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+  }
+
+  .coursepage-enroll-wrapper button {
+    padding: 9px 18px;
+    font-size: 0.85rem;
+  }
+
+  .coursepage-spinner {
+    width: 36px;
+    height: 36px;
+    border-width: 2px;
+  }
+
+  .coursepage-comments-wrapper {
+    margin: 16px auto 0 auto;
+    padding-top: 16px;
+  }
+}
+
+/* ==================== LANDSCAPE MODE (MOBILE) ==================== */
+@media (max-width: 768px) and (orientation: landscape) {
+  .coursepage-main {
+    min-height: auto;
+  }
+
+  .coursepage-tabcontent {
+    padding: 16px 12px;
+  }
+
+  .coursepage-enroll-wrapper {
+    min-height: 200px;
+    padding: 12px;
+  }
+
+  .coursepage-enroll-wrapper h3 {
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+
+  .coursepage-enroll-wrapper p {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+
+  .coursepage-enroll-wrapper button {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+}
+
+/* ==================== TOUCH DEVICE OPTIMIZATIONS ==================== */
+@media (hover: none) and (pointer: coarse) {
+  .coursepage-enroll-wrapper button {
+    min-height: 44px;
+    padding: 12px 24px;
+  }
+
+  .coursepage-tabcontent {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ==================== DARK MODE SUPPORT ==================== */
+@media (prefers-color-scheme: dark) {
+  .coursepage-container {
+    background-color: #111827;
+  }
+
+  .coursepage-enroll-wrapper h3 {
+    color: #f9fafb;
+  }
+
+  .coursepage-enroll-wrapper p {
+    color: #9ca3af;
+  }
+
+  .coursepage-comments-wrapper {
+    border-top-color: #374151;
+  }
+
+  .coursepage-spinner {
+    border-color: #374151;
+    border-top-color: #3b82f6;
+  }
+}
+
+/* ==================== PREVENT HORIZONTAL OVERFLOW ==================== */
+.coursepage-container *,
+.coursepage-main *,
+.coursepage-content *,
+.coursepage-tabcontent * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ==================== SMOOTH SCROLLING ==================== */
+.coursepage-tabcontent {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ==================== FIX FOR FIXED ELEMENTS INSIDE ==================== */
+.coursepage-tabcontent {
+  position: relative;
 }

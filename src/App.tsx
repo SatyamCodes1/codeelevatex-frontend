@@ -20,6 +20,7 @@ import { CourseProvider, useCourse } from "./context/CourseContext";
 import CoursePage from "./pages/CoursePage";
 import { CourseType } from "./types";
 
+
 // API course shape from backend
 interface APICourse {
   _id: string;
@@ -30,6 +31,7 @@ interface APICourse {
   category?: string;
 }
 
+
 // --- Loading Spinner Component ---
 const LoadingSpinner: FC = () => (
   <div className="spinner-overlay">
@@ -38,15 +40,18 @@ const LoadingSpinner: FC = () => (
   </div>
 );
 
+
 // --- AppInitializer (waits for auth to load) ---
 const AppInitializer: FC = () => {
   const { loading: authLoading, isAuthenticated } = useAuth();
   const { loading: userLoading } = useUser();
 
+
   // Wait for both contexts to finish loading
   if (authLoading || userLoading) {
     return <LoadingSpinner />;
   }
+
 
   return (
     <CourseProvider>
@@ -55,16 +60,19 @@ const AppInitializer: FC = () => {
   );
 };
 
+
 // --- AppContent (main app routes and logic) ---
 const AppContent: FC = () => {
   const { user, loading: authLoading } = useAuth();
   const { enrolledCourseIds } = useCourse();
   const navigate = useNavigate();
 
+
   const [showModal, setShowModal] = useState(false);
   const [pendingCourseId, setPendingCourseId] = useState<string | null>(null);
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [loadingCourses, setLoadingCourses] = useState(true);
+
 
   // Redirect after login if user tried enrolling
   useEffect(() => {
@@ -75,67 +83,74 @@ const AppContent: FC = () => {
     }
   }, [user, pendingCourseId, navigate]);
 
+
   // Fetch courses from API
- // Fetch courses from API
-useEffect(() => {
-  const fetchCourses = async () => {
-    setLoadingCourses(true);
-    try {
-      // ✅ FIXED: Remove /api from base URL
-      const apiUrl =
-        process.env.REACT_APP_API_URL?.replace(/\/$/, "") ||
-        "http://localhost:5000";
-      
-      const token = localStorage.getItem("authToken");
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setLoadingCourses(true);
+      try {
+        // ✅ FIXED: Remove /api from base URL
+        const apiUrl =
+          process.env.REACT_APP_API_URL?.replace(/\/$/, "") ||
+          "http://localhost:5000";
+        
+        const token = localStorage.getItem("authToken");
 
-      // ✅ FIXED: Add /api/courses here explicitly
-      const res = await fetch(`${apiUrl}/api/courses`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      });
 
-      if (!res.ok) {
-        throw new Error(`Failed to fetch courses: ${res.status}`);
+        // ✅ FIXED: Add /api/courses here explicitly
+        const res = await fetch(`${apiUrl}/api/courses`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+
+
+        if (!res.ok) {
+          throw new Error(`Failed to fetch courses: ${res.status}`);
+        }
+
+
+        const data = await res.json();
+
+
+        // Handle different API response formats
+        const coursesArray: APICourse[] =
+          Array.isArray(data)
+            ? data
+            : Array.isArray(data.courses)
+            ? data.courses
+            : Array.isArray(data.data)
+            ? data.data
+            : [];
+
+
+        // Map API courses to CourseType
+        const mapped: CourseType[] = coursesArray.map((c: APICourse) => ({
+          _id: c._id,
+          id: c._id,
+          title: c.title,
+          description: c.description || "",
+          icon: c.icon || "📚",
+          price: c.price || 0,
+          category: c.category || "other",
+        }));
+
+
+        setCourses(mapped);
+        console.log("✅ Courses loaded successfully:", mapped.length);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+        setCourses([]);
+      } finally {
+        setLoadingCourses(false);
       }
+    };
 
-      const data = await res.json();
 
-      // Handle different API response formats
-      const coursesArray: APICourse[] =
-        Array.isArray(data)
-          ? data
-          : Array.isArray(data.courses)
-          ? data.courses
-          : Array.isArray(data.data)
-          ? data.data
-          : [];
-
-      // Map API courses to CourseType
-      const mapped: CourseType[] = coursesArray.map((c: APICourse) => ({
-        _id: c._id,
-        id: c._id,
-        title: c.title,
-        description: c.description || "",
-        icon: c.icon || "📚",
-        price: c.price || 0,
-        category: c.category || "other",
-      }));
-
-      setCourses(mapped);
-      console.log("✅ Courses loaded successfully:", mapped.length);
-    } catch (err) {
-      console.error("Error fetching courses:", err);
-      setCourses([]);
-    } finally {
-      setLoadingCourses(false);
-    }
-  };
-
-  fetchCourses();
-}, []);
+    fetchCourses();
+  }, []);
 
 
   // Handle course enrollment click
@@ -153,11 +168,13 @@ useEffect(() => {
     }
   };
 
+
   // Handle login redirect from modal
   const handleLoginRedirect = () => {
     setShowModal(false);
     navigate("/login");
   };
+
 
   // Smooth scroll to courses section
   const scrollToCourses = () => {
@@ -167,9 +184,11 @@ useEffect(() => {
     }
   };
 
+
   if (authLoading) {
     return <LoadingSpinner />;
   }
+
 
   return (
     <>
@@ -177,23 +196,12 @@ useEffect(() => {
       <main>
         <Routes>
           {/* ==================== LOGIN ROUTE ==================== */}
-          <Route
-            path="/login"
-            element={
-              !user ? (
-                <div className="container">
-                  <LoginForm />
-                </div>
-              ) : user.role === "admin" ? (
-                <Navigate to="/admin" replace />
-              ) : (
-                <Navigate to="/dashboard" replace />
-              )
-            }
-          />
+          <Route path="/login" element={<LoginForm />} />
+
 
           {/* ==================== PASSWORD RESET ROUTE ==================== */}
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+
 
           {/* ==================== PROTECTED ROUTES ==================== */}
           {/* User Dashboard */}
@@ -206,6 +214,7 @@ useEffect(() => {
             }
           />
 
+
           {/* Admin Dashboard */}
           <Route
             path="/admin"
@@ -215,6 +224,7 @@ useEffect(() => {
               </ProtectedRoute>
             }
           />
+
 
           {/* Payment Page */}
           <Route
@@ -226,6 +236,7 @@ useEffect(() => {
             }
           />
 
+
           {/* Course Page */}
           <Route
             path="/course/:id"
@@ -236,9 +247,11 @@ useEffect(() => {
             }
           />
 
+
           {/* ==================== PUBLIC PAGES ==================== */}
           <Route path="/community" element={<Community />} />
           <Route path="/contact" element={<Contact />} />
+
 
           {/* ==================== HOME PAGE ==================== */}
           <Route
@@ -248,10 +261,12 @@ useEffect(() => {
                 {/* Hero Section */}
                 <Hero onExplore={scrollToCourses} />
 
+
                 {/* Courses Section */}
                 <section id="courses" className="section bg-gray">
                   <div className="container">
                     <h2 className="section__title">Our Courses</h2>
+
 
                     {loadingCourses ? (
                       <div className="text-center py-8">
@@ -280,10 +295,12 @@ useEffect(() => {
                   </div>
                 </section>
 
+
                 {/* About Section */}
                 <section id="about" className="section">
                   <About user={user} />
                 </section>
+
 
                 {/* Features Section */}
                 <section className="section bg-gray">
@@ -309,6 +326,7 @@ useEffect(() => {
                   </div>
                 </section>
 
+
                 {/* CTA Section */}
                 <section className="section bg-primary">
                   <div className="container text-center">
@@ -331,15 +349,18 @@ useEffect(() => {
                   </div>
                 </section>
 
+
                 {/* Footer */}
                 <Footer />
               </>
             }
           />
 
+
           {/* ==================== 404 FALLBACK ==================== */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+
 
         {/* ==================== LOGIN MODAL ==================== */}
         {showModal && (
@@ -380,6 +401,7 @@ useEffect(() => {
   );
 };
 
+
 // --- Final App with Correct Provider Order ---
 const App: FC = () => (
   // AuthProvider MUST be first (initializes token & user from localStorage)
@@ -391,5 +413,6 @@ const App: FC = () => (
     </UserProvider>
   </AuthProvider>
 );
+
 
 export default App;

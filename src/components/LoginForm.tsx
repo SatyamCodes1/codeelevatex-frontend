@@ -6,20 +6,15 @@ import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 
-
 const API_BASE_URL =
   (process.env.REACT_APP_API_URL?.replace(/\/$/, "") || "http://localhost:5000") + "/api";
-
-
 
 const LoginForm: React.FC = () => {
   const { user, login, register, verifyOtp, resendOtp, setAuthData, loginWithGoogle, loginWithGithub } = useAuth();
   const navigate = useNavigate();
 
-
   const [isNewUser, setIsNewUser] = useState(false);
   const [step, setStep] = useState<"credentials" | "otp" | "reset">("credentials");
-
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,22 +23,18 @@ const LoginForm: React.FC = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
 
-
   const [emailValid, setEmailValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [shake, setShake] = useState(false);
   const [confirmShake, setConfirmShake] = useState(false);
 
-
   // Resend OTP timer
   const [resendTimer, setResendTimer] = useState(0);
   const [canResend, setCanResend] = useState(false);
 
-
   const cardRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-
 
   // -------- VALIDATION --------
   useEffect(() => {
@@ -51,7 +42,6 @@ const LoginForm: React.FC = () => {
     setPasswordValid(password.length >= 6);
     if (isNewUser) setPasswordsMatch(password === confirmPassword);
   }, [email, password, confirmPassword, isNewUser]);
-
 
   // -------- RESEND TIMER --------
   useEffect(() => {
@@ -65,26 +55,22 @@ const LoginForm: React.FC = () => {
     }
   }, [resendTimer, step]);
 
-
   const handleShake = () => {
     setShake(true);
     setTimeout(() => setShake(false), 500);
   };
-
 
   const handleConfirmShake = () => {
     setConfirmShake(true);
     setTimeout(() => setConfirmShake(false), 500);
   };
 
-
   // -------- REDIRECT AFTER LOGIN --------
   useEffect(() => {
-    if (!user) return;
+    if (!user || step === "otp") return;
     if (user.role === "admin") navigate("/admin", { replace: true });
     else navigate("/dashboard", { replace: true });
-  }, [user, navigate]);
-
+  }, [user, navigate, step]);
 
   // -------- AUTH HANDLERS --------
   const handleSubmit = async () => {
@@ -95,35 +81,43 @@ const LoginForm: React.FC = () => {
       return toast.error("Enter valid details");
     }
 
-
     setLoading(true);
     try {
       if (isNewUser) {
         console.log("Registering new user...");
         const otpSent = await register({ name, email, password });
-        if (!otpSent) throw new Error("Signup failed");
+        console.log("Register returned:", otpSent);
+        
+        if (!otpSent) {
+          setLoading(false);
+          throw new Error("Signup failed");
+        }
 
-
-        console.log("Sending OTP to email:", email);
+        console.log("Setting step to OTP");
         setStep("otp");
         setResendTimer(30);
         setCanResend(false);
+        setLoading(false);
         toast.success("OTP sent to your email!");
       } else {
         console.log("Logging in existing user...");
         const authUser = await login({ email, password });
-        if (!authUser) throw new Error("Invalid credentials");
+        
+        if (!authUser) {
+          setLoading(false);
+          throw new Error("Invalid credentials");
+        }
+        
+        setLoading(false);
         toast.success("Logged in successfully!");
       }
     } catch (err: any) {
       console.error("Signup/Login error:", err);
+      setLoading(false);
       handleShake();
       toast.error(err.message || (isNewUser ? "Signup failed" : "Login failed"));
-    } finally {
-      setLoading(false);
     }
   };
-
 
   const handleVerifyOtp = async () => {
     if (!otp) {
@@ -131,54 +125,69 @@ const LoginForm: React.FC = () => {
       return toast.error("Enter OTP");
     }
 
+    if (otp.length !== 6) {
+      handleShake();
+      return toast.error("OTP must be 6 digits");
+    }
 
     setLoading(true);
     try {
       console.log("Verifying OTP for:", email, "OTP:", otp);
       const authUser = await verifyOtp(email, otp);
-      if (!authUser) throw new Error("OTP verification failed");
+      
+      if (!authUser) {
+        setLoading(false);
+        handleShake();
+        toast.error("OTP verification failed");
+        return;
+      }
 
-
+      setLoading(false);
       toast.success("Account created and logged in!");
+      // Don't manually navigate - let the useEffect handle it
     } catch (err: any) {
       console.error("OTP verification error:", err);
-      handleShake();
-      toast.error(err.message || "Invalid OTP");
-    } finally {
       setLoading(false);
+      handleShake();
+      
+      // Stay on OTP page on error
+      const errorMessage = err.message || "Invalid OTP";
+      toast.error(errorMessage);
+      
+      // Clear OTP field on error
+      setOtp("");
     }
   };
-
 
   const handleResendOtp = async () => {
     if (!canResend || resendTimer > 0) return;
 
-
     setLoading(true);
     try {
       const success = await resendOtp(email);
-      if (!success) throw new Error("Failed to resend OTP");
+      
+      if (!success) {
+        setLoading(false);
+        throw new Error("Failed to resend OTP");
+      }
 
-
+      setLoading(false);
       toast.success("OTP resent successfully!");
       setResendTimer(30);
       setCanResend(false);
       setOtp("");
     } catch (err: any) {
       console.error("Resend OTP error:", err);
-      toast.error(err.message || "Failed to resend OTP");
-    } finally {
       setLoading(false);
+      toast.error(err.message || "Failed to resend OTP");
     }
   };
-
 
   const sendResetLink = async () => {
     if (!emailValid) {
       handleShake();
       return toast.error("Enter a valid email");
     }
-
 
     setLoading(true);
     try {
@@ -188,20 +197,24 @@ const LoginForm: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      if (!res.ok) throw new Error("Failed to send reset link");
+      
+      if (!res.ok) {
+        setLoading(false);
+        throw new Error("Failed to send reset link");
+      }
+      
       await res.json();
+      setLoading(false);
       toast.success("Reset link sent! Check your email");
       setEmail("");
       setStep("credentials");
     } catch (err: any) {
       console.error("Reset link error:", err);
+      setLoading(false);
       handleShake();
       toast.error(err.message || "Failed to send reset link");
-    } finally {
-      setLoading(false);
     }
   };
-
 
   const resetFields = () => {
     setName("");
@@ -213,11 +226,9 @@ const LoginForm: React.FC = () => {
     setCanResend(false);
   };
 
-
   const handleGoHome = () => {
     navigate("/", { replace: true });
   };
-
 
   // -------- JSX --------
   return (
@@ -228,11 +239,9 @@ const LoginForm: React.FC = () => {
           ✕
         </button>
 
-
         <h2 className="login-title">
-          {isNewUser ? "Create Account" : step === "reset" ? "Reset Password" : "Welcome Back"}
+          {step === "otp" ? "Verify Your Email" : isNewUser ? "Create Account" : step === "reset" ? "Reset Password" : "Welcome Back"}
         </h2>
-
 
         {/* Toggle Buttons / Back Button */}
         {step !== "reset" && step !== "otp" ? (
@@ -265,7 +274,6 @@ const LoginForm: React.FC = () => {
             </button>
           </div>
         ) : null}
-
 
         {/* Credentials Form */}
         {step === "credentials" && (
@@ -322,14 +330,12 @@ const LoginForm: React.FC = () => {
           </div>
         )}
 
-
         {/* OTP Form */}
         {step === "otp" && (
-          <div className="login-form fade-in">
+          <div className={`login-form fade-in ${shake ? "shake" : ""}`}>
             <p className="otp-instruction">
               Enter the 6-digit OTP sent to <strong>{email}</strong>
             </p>
-
 
             <input
               type="text"
@@ -338,13 +344,12 @@ const LoginForm: React.FC = () => {
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
               className="input-field"
               maxLength={6}
+              autoFocus
             />
 
-
-            <button className="submit-btn big-btn" onClick={handleVerifyOtp} disabled={loading}>
+            <button className="submit-btn big-btn" onClick={handleVerifyOtp} disabled={loading || otp.length !== 6}>
               {loading ? "Verifying..." : "Verify OTP"}
             </button>
-
 
             {/* Resend OTP Section */}
             <div className="resend-otp-section">
@@ -363,19 +368,18 @@ const LoginForm: React.FC = () => {
               )}
             </div>
 
-
             <button
               className="submit-btn back-btn"
               onClick={() => {
                 setStep("credentials");
                 resetFields();
               }}
+              disabled={loading}
             >
               Back to Signup
             </button>
           </div>
         )}
-
 
         {/* Reset Password Form */}
         {step === "reset" && (
@@ -394,7 +398,6 @@ const LoginForm: React.FC = () => {
           </div>
         )}
 
-
         {/* Social Login */}
         {step === "credentials" && (
           <div className="social-login">
@@ -410,6 +413,5 @@ const LoginForm: React.FC = () => {
     </div>
   );
 };
-
 
 export default LoginForm;

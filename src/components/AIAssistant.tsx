@@ -23,7 +23,8 @@ interface Message {
   timestamp: Date;
 }
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// ✅ FIXED: Removed /api from base URL
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const AIAssistant: React.FC<AIAssistantProps> = ({ courseId, currentLesson }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -95,7 +96,8 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ courseId, currentLesson }) =>
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       };
 
-      const response = await fetch(`${API_URL}/ai/chat`, {
+      // ✅ FIXED: Added /api prefix
+      const response = await fetch(`${API_BASE}/api/ai/chat`, {
         method: 'POST',
         headers,
         body: JSON.stringify({

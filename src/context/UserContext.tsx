@@ -57,7 +57,11 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
   );
   const [loading, setLoading] = useState<boolean>(true);
 
-  // 🔁 Restore from localStorage instantly (before hitting API)
+  // ✅ Normalize API base (remove any trailing slash)
+  const API_BASE =
+    process.env.REACT_APP_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
+
+  // 🔁 Restore from localStorage instantly
   useEffect(() => {
     const storedUser = localStorage.getItem("authUser");
     const storedToken = localStorage.getItem("authToken");
@@ -85,15 +89,12 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
     }
 
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/auth/me`, // ✅ fixed endpoint
-        {
-          headers: {
-            Authorization: `Bearer ${savedToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${savedToken}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -110,7 +111,7 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
 
         setUser(normalizedUser);
         setToken(savedToken);
-        localStorage.setItem("authUser", JSON.stringify(normalizedUser)); // ✅ keep in sync
+        localStorage.setItem("authUser", JSON.stringify(normalizedUser));
       } else {
         console.warn("Auth check failed, removing invalid token");
         localStorage.removeItem("authToken");
@@ -129,7 +130,7 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
     }
   };
 
-  // ✅ store user + token
+  // ✅ Store user + token
   const setAuthData = (user: User, token: string) => {
     const normalizedUser: User = { ...user, id: user._id || user.id };
     localStorage.setItem("authToken", token);
@@ -143,14 +144,11 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
     password: string
   ): Promise<AuthResponse> => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/auth/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
       const data = await response.json();
 
@@ -173,14 +171,11 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
     role: string = "user"
   ): Promise<AuthResponse> => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/auth/register`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password, role }),
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role }),
+      });
 
       const data = await response.json();
 
@@ -192,7 +187,10 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
       }
     } catch (err) {
       console.error("Registration error:", err);
-      return { success: false, message: "Registration failed. Please try again." };
+      return {
+        success: false,
+        message: "Registration failed. Please try again.",
+      };
     }
   };
 

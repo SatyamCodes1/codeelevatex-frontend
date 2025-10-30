@@ -2,14 +2,12 @@ import React, { useState, useEffect, FormEvent } from 'react';
 import { useUser } from '../context/UserContext';
 import '../styles/Comments.css';
 
-
 interface CommentUser {
   _id?: string;
   id?: string;
   name: string;
   role: 'admin' | 'user';
 }
-
 
 interface CommentData {
   _id: string;
@@ -21,15 +19,13 @@ interface CommentData {
   children?: CommentData[];
 }
 
-
 interface CommentsProps {
   courseId: string;
   lessonId?: string;
 }
 
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
+// ✅ FIXED: Removed /api from base URL
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
   const [comments, setComments] = useState<CommentData[]>([]);
@@ -72,7 +68,6 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
     if (courseId) loadComments();
   }, [courseId, lessonId]);
 
-
   const loadComments = async () => {
     try {
       setLoading(true);
@@ -80,7 +75,8 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
         'Content-Type': 'application/json',
         ...(currentToken ? { Authorization: `Bearer ${currentToken}` } : {}),
       };
-      const res = await fetch(`${API_URL}/comments/${courseId}?lessonId=${lessonId || ''}`, { headers });
+      // ✅ FIXED: Added /api prefix
+      const res = await fetch(`${API_BASE}/api/comments/${courseId}?lessonId=${lessonId || ''}`, { headers });
       if (res.ok) {
         const data = await res.json();
         console.log('🧠 BACKEND COMMENTS RESPONSE:', data.comments);
@@ -93,11 +89,9 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
     }
   };
 
-
   const buildCommentTree = (flatComments: CommentData[]): CommentData[] => {
     const map = new Map<string, CommentData>();
     const roots: CommentData[] = [];
-
 
     flatComments.forEach(c => map.set(c._id, { ...c, children: [] }));
     map.forEach(c => {
@@ -109,7 +103,6 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
     });
     return roots;
   };
-
 
   const submitComment = async (content: string, parentId?: string) => {
     if (!currentUser || !currentToken) {
@@ -125,7 +118,8 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
     }
 
     try {
-      const res = await fetch(`${API_URL}/comments`, {
+      // ✅ FIXED: Added /api prefix
+      const res = await fetch(`${API_BASE}/api/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -159,7 +153,6 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
     }
   };
 
-
   const deleteComment = async (commentId: string) => {
     if (!currentUser || !currentToken) {
       alert('Please log in to delete');
@@ -172,7 +165,8 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
     }
 
     try {
-      const res = await fetch(`${API_URL}/comments/${commentId}`, {
+      // ✅ FIXED: Added /api prefix
+      const res = await fetch(`${API_BASE}/api/comments/${commentId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${currentToken}` },
       });
@@ -189,12 +183,10 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
     }
   };
 
-
   const removeCommentById = (arr: CommentData[], id: string): CommentData[] =>
     arr
       .filter(c => c._id !== id)
       .map(c => ({ ...c, children: c.children ? removeCommentById(c.children, id) : [] }));
-
 
   const handleSubmitNewComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -205,12 +197,10 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
     setIsSubmitting(false);
   };
 
-
   const CommentItem: React.FC<{ comment: CommentData; depth?: number }> = ({ comment, depth = 0 }) => {
     const [showReply, setShowReply] = useState(false);
     const [replyText, setReplyText] = useState('');
     const [isReplying, setIsReplying] = useState(false);
-
 
     const handleReply = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -223,7 +213,6 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
       }
       setIsReplying(false);
     };
-
 
     // ✅ Handle both user + userId
     const commentOwnerId =
@@ -238,7 +227,6 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
       currentUser &&
       (currentUser.role === 'admin' ||
         (commentOwnerId && currentUserId && commentOwnerId.toString() === currentUserId.toString()));
-
 
     return (
       <div className={`comment-item ${depth > 0 ? 'nested' : ''}`}>
@@ -259,9 +247,7 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
             </div>
           </div>
 
-
           <div className="comment-content">{comment.content}</div>
-
 
           <div className="comment-actions">
             {currentUser && (
@@ -275,7 +261,6 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
               </button>
             )}
           </div>
-
 
           {showReply && currentUser && (
             <form onSubmit={handleReply} className="reply-form">
@@ -299,7 +284,6 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
           )}
         </div>
 
-
         {comment.children?.map(child => (
           <CommentItem key={child._id} comment={child} depth={depth + 1} />
         ))}
@@ -307,12 +291,10 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
     );
   };
 
-
   return (
     <div className="comments-container">
       <div className="comments-card">
         <h3 className="comments-title">💬 Discussion ({comments.length})</h3>
-
 
         {currentUser ? (
           <form onSubmit={handleSubmitNewComment} className="new-comment-form">
@@ -347,7 +329,6 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
           </div>
         )}
 
-
         {loading ? (
           <div className="loading-comments">
             <div className="spinner"></div>
@@ -368,6 +349,5 @@ const Comments: React.FC<CommentsProps> = ({ courseId, lessonId }) => {
     </div>
   );
 };
-
 
 export default Comments;

@@ -1,8 +1,11 @@
 import axios, { AxiosRequestConfig } from "axios";
 
 // ================== AXIOS INSTANCE ==================
+// ✅ FIXED: Ensure /api is always included
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
+  baseURL: process.env.REACT_APP_API_URL 
+    ? `${process.env.REACT_APP_API_URL.replace(/\/$/, '')}/api`
+    : "http://localhost:5000/api",
   headers: { "Content-Type": "application/json" },
 });
 

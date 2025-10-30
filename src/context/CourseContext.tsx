@@ -113,7 +113,8 @@ export const CourseProvider: React.FC<CourseProviderProps> = ({ children }) => {
   const [enrolledCourseIds, setEnrolledCourseIds] = useState<string[]>([]);
   const [enrollmentsLoaded, setEnrollmentsLoaded] = useState(false);
 
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+  // ✅ FIXED: Remove /api from default (will be added in fetch calls)
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
   const loadEnrollments = useCallback(async () => {
     if (!user || !token) {
@@ -122,7 +123,8 @@ export const CourseProvider: React.FC<CourseProviderProps> = ({ children }) => {
       return;
     }
     try {
-      const res = await fetch(`${API_URL}/enrollments/my/enrollments`, {
+      // ✅ FIXED: Added /api prefix
+      const res = await fetch(`${API_URL}/api/enrollments/my/enrollments`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -150,7 +152,8 @@ export const CourseProvider: React.FC<CourseProviderProps> = ({ children }) => {
       return { success: false, message: "Please log in to enroll." };
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/enrollments/${courseId}/enroll`, {
+      // ✅ FIXED: Added /api prefix
+      const res = await fetch(`${API_URL}/api/enrollments/${courseId}/enroll`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -192,7 +195,8 @@ export const CourseProvider: React.FC<CourseProviderProps> = ({ children }) => {
       const headers: Record<string, string> = { "Content-Type": "application/json" };
       if (user && token) headers["Authorization"] = `Bearer ${token}`;
 
-      const res = await fetch(`${API_URL}/courses/${courseId}`, { headers });
+      // ✅ FIXED: Added /api prefix
+      const res = await fetch(`${API_URL}/api/courses/${courseId}`, { headers });
       const data = await res.json();
 
       if (res.ok && data.course) {
@@ -252,7 +256,8 @@ export const CourseProvider: React.FC<CourseProviderProps> = ({ children }) => {
     if (!user || !token || !currentCourse)
       return { success: false, message: "Not authorized" };
     try {
-      const res = await fetch(`${API_URL}/progress/lesson/${lessonId}`, {
+      // ✅ FIXED: Added /api prefix
+      const res = await fetch(`${API_URL}/api/progress/lesson/${lessonId}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

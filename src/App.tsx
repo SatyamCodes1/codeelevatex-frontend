@@ -76,61 +76,67 @@ const AppContent: FC = () => {
   }, [user, pendingCourseId, navigate]);
 
   // Fetch courses from API
-  useEffect(() => {
-    const fetchCourses = async () => {
-      setLoadingCourses(true);
-      try {
-        const apiUrl =
-          process.env.REACT_APP_API_URL?.replace(/\/$/, "") ||
-          "http://localhost:5000/api";
-        const token = localStorage.getItem("authToken");
+ // Fetch courses from API
+useEffect(() => {
+  const fetchCourses = async () => {
+    setLoadingCourses(true);
+    try {
+      // ✅ FIXED: Remove /api from base URL
+      const apiUrl =
+        process.env.REACT_APP_API_URL?.replace(/\/$/, "") ||
+        "http://localhost:5000";
+      
+      const token = localStorage.getItem("authToken");
 
-        const res = await fetch(`${apiUrl}/courses`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-        });
+      // ✅ FIXED: Add /api/courses here explicitly
+      const res = await fetch(`${apiUrl}/api/courses`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
 
-        if (!res.ok) {
-          throw new Error(`Failed to fetch courses: ${res.status}`);
-        }
-
-        const data = await res.json();
-
-        // Handle different API response formats
-        const coursesArray: APICourse[] =
-          Array.isArray(data)
-            ? data
-            : Array.isArray(data.courses)
-            ? data.courses
-            : Array.isArray(data.data)
-            ? data.data
-            : [];
-
-        // Map API courses to CourseType
-        const mapped: CourseType[] = coursesArray.map((c: APICourse) => ({
-          _id: c._id,
-          id: c._id,
-          title: c.title,
-          description: c.description || "",
-          icon: c.icon || "📚",
-          price: c.price || 0,
-          category: c.category || "other",
-        }));
-
-        setCourses(mapped);
-      } catch (err) {
-        console.error("Error fetching courses:", err);
-        setCourses([]);
-      } finally {
-        setLoadingCourses(false);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch courses: ${res.status}`);
       }
-    };
 
-    fetchCourses();
-  }, []);
+      const data = await res.json();
+
+      // Handle different API response formats
+      const coursesArray: APICourse[] =
+        Array.isArray(data)
+          ? data
+          : Array.isArray(data.courses)
+          ? data.courses
+          : Array.isArray(data.data)
+          ? data.data
+          : [];
+
+      // Map API courses to CourseType
+      const mapped: CourseType[] = coursesArray.map((c: APICourse) => ({
+        _id: c._id,
+        id: c._id,
+        title: c.title,
+        description: c.description || "",
+        icon: c.icon || "📚",
+        price: c.price || 0,
+        category: c.category || "other",
+      }));
+
+      setCourses(mapped);
+      console.log("✅ Courses loaded successfully:", mapped.length);
+    } catch (err) {
+      console.error("Error fetching courses:", err);
+      setCourses([]);
+    } finally {
+      setLoadingCourses(false);
+    }
+  };
+
+  fetchCourses();
+}, []);
+
 
   // Handle course enrollment click
   const handleCourseEnrollClick = (courseId: string) => {

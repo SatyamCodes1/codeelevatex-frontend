@@ -772,48 +772,10 @@ main {
 }
 
 /* ==== FEATURE CARD ==== */
-/* ==== WHY CHOOSE US SECTION ==== */
-.section.bg-gray {
-  background: #f8f9fb;
-  padding: 4rem 2rem;
-}
-
-.section__title {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 2.5rem;
-  color: #111;
-}
-
-/* ==== FEATURE GRID ==== */
-.grid {
-  display: grid;
-  gap: 2rem;
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.grid-cols-3 {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.grid-cols-1 {
-  grid-template-columns: 1fr;
-}
-
-/* ==== FEATURE CARD ==== */
 .feature {
   text-align: center;
   padding: 2rem;
   background: #fff;
-  border-radius: var(--border-radius, 1rem);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  color: #111;
-  opacity: 1;
   border-radius: var(--border-radius, 1rem);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
@@ -824,58 +786,6 @@ main {
 .feature-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: #ffb400;
-}
-
-.feature h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #222;
-  margin-top: 0.5rem;
-}
-
-/* Hover (Desktop Only) */
-@media (hover: hover) {
-  .feature:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  }
-}
-
-/* ==== MOBILE STYLING ==== */
-@media (max-width: 768px) {
-  .section.bg-gray {
-    padding: 2.5rem 1rem;
-  }
-
-  .section__title {
-    font-size: 1.5rem;
-  }
-
-  .grid-cols-2, .grid-cols-3 {
-    grid-template-columns: 1fr; /* stack cards */
-  }
-
-  .feature {
-    padding: 1.5rem;
-    background: #ffffff !important;
-    opacity: 1 !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    color: #000 !important;
-  }
-
-  .feature-icon {
-    font-size: 2rem;
-    color: #ffb400 !important;
-  }
-
-  .feature h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #222;
-  }
-}
-
   color: #ffb400;
 }
 

@@ -369,13 +369,21 @@ const AppContent: FC = () => {
               className="modal-content"
               onClick={(e) => e.stopPropagation()}
             >
-              <button
-                className="modal-close"
-                onClick={() => setShowModal(false)}
-              >
-                ✕
-              </button>
-              <h2>Login Required</h2>
+             
+             <h2 style={{
+  color: '#000000',
+  fontSize: '1.75rem',
+  fontWeight: '700',
+  marginBottom: '1.5rem',
+  textAlign: 'center',
+  opacity: '1',
+  visibility: 'visible',
+  WebkitFontSmoothing: 'antialiased',
+  MozOsxFontSmoothing: 'grayscale'
+}}>
+  Login Required
+</h2>
+
               <p>
                 You need to create an account or login to enroll in this course.
               </p>
